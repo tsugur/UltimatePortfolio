@@ -16,6 +16,7 @@ struct EditProjectView: View {
 	@State private var title: String
 	@State private var detail: String
 	@State private var color: String
+	@State private var closed: Bool
 	@State private var showingDeleteConfirm = false
 	
 	let colorColumns = [GridItem(.adaptive(minimum: 44))]
@@ -26,6 +27,7 @@ struct EditProjectView: View {
 		_title = State(wrappedValue: project.projectTitle)
 		_detail = State(wrappedValue: project.projectDetail)
 		_color = State(wrappedValue: project.projectColor)
+		_closed = State(wrappedValue: project.closed)
 	}
 	
     var body: some View {
@@ -37,36 +39,14 @@ struct EditProjectView: View {
 			
 			Section("Custom project color") {
 				LazyVGrid(columns: colorColumns) {
-					ForEach(Project.colors, id: \.self) { item in
-						ZStack {
-							Color(item)
-								.aspectRatio(1, contentMode: .fit)
-								.cornerRadius(6)
-							if item == color {
-								Image(systemName: "checkmark.circle")
-									.foregroundColor(.white)
-									.font(.largeTitle)
-							}
-						}
-						.onTapGesture {
-							color = item
-							update()
-						}
-						.accessibilityElement(children: .ignore)
-						.accessibilityAddTraits(
-							item == color
-							? [.isButton, .isSelected]
-							: .isButton
-						)
-						.accessibilityLabel(LocalizedStringKey(item))
-					}
+					ForEach(Project.colors, id: \.self, content: colorPicker)
 				}
 				.padding(.vertical)
 			}
 			
 			Section(footer: Text("Closing a project moves it from the Open to Closed tab. Deleting it removes the project completely.")) {
-				Button(project.closed ? "Reopen this project" : "Close this project") {
-					project.closed.toggle()
+				Button(closed ? "Reopen this project" : "Close this project") {
+					closed.toggle()
 					update()
 				}
 				
@@ -87,13 +67,37 @@ struct EditProjectView: View {
 		project.title = title
 		project.detail = detail
 		project.color = color
+		project.closed = closed
 	}
 	
 	func delete() {
 		dataController.delete(project)
 		dismiss()
 	}
-
+	
+	func colorPicker(for item: String) -> some View {
+		ZStack {
+			Color(item)
+				.aspectRatio(1, contentMode: .fit)
+				.cornerRadius(6)
+			if item == color {
+				Image(systemName: "checkmark.circle")
+					.foregroundColor(.white)
+					.font(.largeTitle)
+			}
+		}
+		.onTapGesture {
+			color = item
+			update()
+		}
+		.accessibilityElement(children: .ignore)
+		.accessibilityAddTraits(
+			item == color
+			? [.isButton, .isSelected]
+			: .isButton
+		)
+		.accessibilityLabel(LocalizedStringKey(item))
+	}
 }
 
 struct EditProjectView_Previews: PreviewProvider {
