@@ -9,8 +9,8 @@ import SwiftUI
 
 struct ProjectHeaderView: View {
 	@ObservedObject var project: Project
-	
-    var body: some View {
+
+	var body: some View {
 		HStack {
 			VStack(alignment: .leading) {
 				Text(project.completionAmount == 1 ? "\(project.projectTitle) – Completed" : project.projectTitle)
@@ -18,7 +18,7 @@ struct ProjectHeaderView: View {
 					.tint(Color(project.projectColor))
 			}
 			Spacer()
-			NavigationLink (destination: EditProjectView(project: project)) {
+			NavigationLink(destination: EditProjectView(project: project)) {
 				Image(systemName: "square.and.pencil")
 					.imageScale(.large)
 					.foregroundColor(.secondary)
@@ -26,11 +26,11 @@ struct ProjectHeaderView: View {
 		}
 		.padding(.bottom, 10)
 		.accessibilityElement(children: .combine)
-    }
+	}
 }
 
 struct ProjectHeaderView_Previews: PreviewProvider {
-    static var previews: some View {
+	static var previews: some View {
 		ProjectHeaderView(project: Project.example)
-    }
+	}
 }

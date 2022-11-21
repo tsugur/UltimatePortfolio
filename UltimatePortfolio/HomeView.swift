@@ -10,69 +10,81 @@ import SwiftUI
 
 struct HomeView: View {
 	static let tag: String? = "Home"
-	
+
 	@EnvironmentObject var dataController: DataController
-	
-	@FetchRequest(entity: Project.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Project.title, ascending: true)], predicate: NSPredicate(format: "closed = false")) var projects: FetchedResults<Project>
+
+	@FetchRequest(
+		entity: Project.entity(),
+		sortDescriptors: [NSSortDescriptor(keyPath: \Project.title, ascending: true)],
+		predicate: NSPredicate(format: "closed = false")
+	) var projects: FetchedResults<Project>
+
 	let items: FetchRequest<Item>
-	
+
 	var projectRows: [GridItem] {
 		[GridItem(.fixed(100))]
 	}
-	
+
 	init() {
 		let request: NSFetchRequest<Item> = Item.fetchRequest()
-		request.predicate = NSPredicate(format: "completed = false")
+
+		let completedPredicate = NSPredicate(format: "completed = false")
+		let openPredicate = NSPredicate(format: "project.closed = false")
+		let compoundPredicate = NSCompoundPredicate(type: .and, subpredicates: [completedPredicate, openPredicate])
+		request.predicate = compoundPredicate
+
 		request.sortDescriptors = [NSSortDescriptor(keyPath: \Item.priority, ascending: false)]
 		request.fetchLimit = 10
 		items = FetchRequest(fetchRequest: request)
 	}
-	
-    var body: some View {
+
+	var body: some View {
 		NavigationStack {
-			if !projects.isEmpty {
-				ScrollView {
-					VStack(alignment: .leading) {
-						ScrollView(.horizontal, showsIndicators: false) {
-							LazyHGrid(rows: projectRows) {
-								ForEach(projects, content: ProjectSummaryView.init)
-								
-							}
-							.padding([.horizontal, .top])
-							.fixedSize(horizontal: false, vertical: true)
-						}
+			Group {
+				if !projects.isEmpty {
+					ScrollView {
 						VStack(alignment: .leading) {
-							ItemListView(title: "Up next", items: items.wrappedValue.prefix(3))
-							ItemListView(title: "More to explore", items: items.wrappedValue.dropFirst(3))
+							ScrollView(.horizontal, showsIndicators: false) {
+								LazyHGrid(rows: projectRows) {
+									ForEach(projects, content: ProjectSummaryView.init)
+
+								}
+								.padding([.horizontal, .top])
+								.fixedSize(horizontal: false, vertical: true)
+							}
+							VStack(alignment: .leading) {
+								ItemListView(title: "Up next", items: items.wrappedValue.prefix(3))
+								ItemListView(title: "More to explore", items: items.wrappedValue.dropFirst(3))
+							}
+							.padding(.horizontal)
 						}
-						.padding(.horizontal)
 					}
+					.background(Color.systemGroupedBackground)
+				} else {
+					Text("Your active projects will appear here")
+						.foregroundColor(.secondary)
+						.font(.title2)
 				}
-				.background(Color.systemGroupedBackground)
-			.navigationTitle("Home")
-			} else {
-				Text ("Your active projects will appear here")
-					.foregroundColor(.secondary)
-					.font(.title)
 			}
+			.navigationTitle("Home")
 		}
-    }
+	}
 }
 
-//Button("Add Data") {
-//	dataController.deleteAll()
-//	try? dataController.createSampleData()
-//}
-//Button("Delete All Data") {
-//	dataController.deleteAll()
-//}
+//	Button("Add Data") {
+//		dataController.deleteAll()
+//		try? dataController.createSampleData()
+//	}
+//	Button("Delete All Data") {
+//		dataController.deleteAll()
+//	}
 
 struct HomeView_Previews: PreviewProvider {
 	static var dataController = DataController.preview
-	
-    static var previews: some View {
-        HomeView()
+
+	static var previews: some View {
+		HomeView()
 			.environment(\.managedObjectContext, dataController.container.viewContext)
 			.environmentObject(dataController)
-    }
+	}
 }

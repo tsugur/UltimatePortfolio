@@ -9,8 +9,8 @@ import SwiftUI
 
 struct ProjectSummaryView: View {
 	let project: Project
-	
-    var body: some View {
+
+	var body: some View {
 		VStack(alignment: .leading) {
 			Text("\(project.projectItems.count) items")
 				.font(.caption)
@@ -26,11 +26,11 @@ struct ProjectSummaryView: View {
 		.shadow(color: .black.opacity(0.2), radius: 5)
 		.accessibilityElement(children: .ignore)
 		.accessibilityLabel(project.label)
-    }
+	}
 }
 
 struct ProjectSummaryView_Previews: PreviewProvider {
-    static var previews: some View {
+	static var previews: some View {
 		ProjectSummaryView(project: Project.example)
-    }
+	}
 }

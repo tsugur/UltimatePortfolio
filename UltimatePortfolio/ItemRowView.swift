@@ -10,8 +10,8 @@ import SwiftUI
 struct ItemRowView: View {
 	@ObservedObject var project: Project
 	@ObservedObject var item: Item
-	
-    var body: some View {
+
+	var body: some View {
 		NavigationLink(destination: EditItemView(item: item)) {
 			HStack {
 				Text(item.itemTitle)
@@ -26,7 +26,7 @@ struct ItemRowView: View {
 		}
 		.accessibilityLabel(label)
 	}
-	
+
 	var label: Text {
 		if item.completed {
 			return Text("\(item.itemTitle), completed.")
@@ -39,7 +39,7 @@ struct ItemRowView: View {
 }
 
 struct ItemRowView_Previews: PreviewProvider {
-    static var previews: some View {
+	static var previews: some View {
 		NavigationStack {
 			ItemRowView(project: Project.example, item: Item.example)
 				.padding()
@@ -49,5 +49,5 @@ struct ItemRowView_Previews: PreviewProvider {
 				}
 				.padding()
 		}
-    }
+	}
 }
