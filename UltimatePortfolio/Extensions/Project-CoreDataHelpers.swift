@@ -33,9 +33,9 @@ extension Project {
 	func projectItems(using sortOrder: Item.SortOrder) -> [Item] {
 		switch sortOrder {
 			case .title:
-				return projectItems.sorted { $0.itemTitle < $1.itemTitle }
+				return projectItems.sorted(by: \Item.itemTitle)
 			case .creationDate:
-				return projectItems.sorted { $0.itemCreationDate < $1.itemCreationDate }
+				return projectItems.sorted(by: \Item.itemCreationDate)
 			case .optimized:
 				return projectItemsDefaultSorted
 		}
@@ -77,7 +77,7 @@ extension Project {
 	}
 
 	static var example: Project {
-		let controller = DataController(inMemory: true)
+		let controller = DataController.preview
 		let viewContext = controller.container.viewContext
 
 		let project = Project(context: viewContext)

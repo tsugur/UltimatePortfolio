@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Award: Decodable, Identifiable {
+struct Award: Decodable, Identifiable, Equatable {
 	var id: String {name}
 	let name: String
 	let description: String
