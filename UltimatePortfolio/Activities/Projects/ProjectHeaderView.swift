@@ -19,8 +19,9 @@ struct ProjectHeaderView: View {
 			}
 			Spacer()
 			NavigationLink(destination: EditProjectView(project: project)) {
-				Image(systemName: "square.and.pencil")
+				Label(project.projectTitle, systemImage: "square.and.pencil")
 					.imageScale(.large)
+					.labelStyle(.iconOnly)
 					.foregroundColor(.secondary)
 			}
 		}
