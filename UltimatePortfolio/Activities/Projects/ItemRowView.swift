@@ -8,8 +8,17 @@
 import SwiftUI
 
 struct ItemRowView: View {
-	@ObservedObject var project: Project
+	@StateObject var viewModel: ViewModel
+
+//	@ObservedObject var project: Project
 	@ObservedObject var item: Item
+
+	init(project: Project, item: Item) {
+		let viewModel = ViewModel(project: project, item: item)
+		_viewModel = StateObject(wrappedValue: viewModel)
+//		_project = ObservedObject(wrappedValue: project)
+		_item = ObservedObject(wrappedValue: item)
+	}
 
 	var body: some View {
 		NavigationLink(destination: EditItemView(item: item)) {
@@ -17,24 +26,14 @@ struct ItemRowView: View {
 				Text(item.itemTitle)
 				Spacer()
 				Group {
-					Text(item.priority > 2 ? "•••" : item.priority > 1 ? "••" : "•")
+					Text(viewModel.icon.priority)
 						.font(.headline)
-					Image(systemName: item.completed ? "checkmark.circle" : "circle")
+					Image(systemName: viewModel.icon.completion)
 				}
-				.foregroundColor(Color(project.projectColor))
+				.foregroundColor(Color(viewModel.color))
 			}
 		}
-		.accessibilityLabel(label)
-	}
-
-	var label: Text {
-		if item.completed {
-			return Text("\(item.itemTitle), completed.")
-		} else if item.priority == 3 {
-			return Text("\(item.itemTitle), high priority.")
-		} else {
-			return Text(item.itemTitle)
-		}
+		.accessibilityLabel(viewModel.label)
 	}
 }
 

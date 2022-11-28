@@ -33,5 +33,6 @@ struct ProjectHeaderView: View {
 struct ProjectHeaderView_Previews: PreviewProvider {
 	static var previews: some View {
 		ProjectHeaderView(project: Project.example)
+			.padding()
 	}
 }

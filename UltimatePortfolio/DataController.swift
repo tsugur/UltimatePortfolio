@@ -106,11 +106,16 @@ class DataController: ObservableObject {
 	func deleteAll() {
 		let fetchRequest1: NSFetchRequest<NSFetchRequestResult> = Item.fetchRequest()
 		let batchDeleteRequest1 = NSBatchDeleteRequest(fetchRequest: fetchRequest1)
-		_ = try? container.viewContext.execute(batchDeleteRequest1)
 
 		let fetchRequest2: NSFetchRequest<NSFetchRequestResult> = Project.fetchRequest()
 		let batchDeleteRequest2 = NSBatchDeleteRequest(fetchRequest: fetchRequest2)
-		_ = try? container.viewContext.execute(batchDeleteRequest2)
+
+		do {
+			try container.viewContext.execute(batchDeleteRequest1)
+			try container.viewContext.execute(batchDeleteRequest2)
+		} catch {
+			print("Failed to delete all data.")
+		}
 	}
 
 	func count<T>(for fetchRequest: NSFetchRequest<T>) -> Int {
