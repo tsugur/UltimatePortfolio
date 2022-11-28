@@ -52,18 +52,11 @@ struct HomeView: View {
 			.navigationTitle("Home")
 			.toolbar {
 				Button("Add Data", action: viewModel.addSampleData)
+				Button("Delete All", action: viewModel.dataController.deleteAll)
 			}
 		}
 	}
 }
-
-//	Button("Add Data") {
-//		dataController.deleteAll()
-//		try? dataController.createSampleData()
-//	}
-//	Button("Delete All Data") {
-//		dataController.deleteAll()
-//	}
 
 struct HomeView_Previews: PreviewProvider {
 	static var previews: some View {

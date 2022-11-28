@@ -50,9 +50,3 @@ struct ItemListView: View {
 		.buttonStyle(.plain)
 	}
 }
-
-// struct ItemListView_Previews: PreviewProvider {
-//     static var previews: some View {
-// 		ItemListView()
-//     }
-// }

@@ -14,7 +14,7 @@ struct AwardsView: View {
 	@State private var selectedAward = Award.example
 	@State private var showingAwardsDetails = false
 
-	var columns = [GridItem(.adaptive(minimum: 100, maximum: 100))]
+	var columns = [GridItem](repeating: GridItem(), count: 4)
 
 	var body: some View {
 		NavigationStack {
@@ -29,13 +29,14 @@ struct AwardsView: View {
 								.resizable()
 								.scaledToFit()
 								.padding()
-								.frame(width: 100, height: 100)
+//								.frame(width: 100, height: 100)
 								.foregroundColor(color(for: award))
 						}
 						.accessibilityLabel(accessibilityLabel(for: award))
 						.accessibilityHint(Text(award.description))
 					}
 				}
+				.padding(.horizontal)
 			}
 			.navigationTitle("Awards")
 		}

@@ -113,6 +113,7 @@ class DataController: ObservableObject {
 		do {
 			try container.viewContext.execute(batchDeleteRequest1)
 			try container.viewContext.execute(batchDeleteRequest2)
+			try container.viewContext.save()
 		} catch {
 			print("Failed to delete all data.")
 		}
