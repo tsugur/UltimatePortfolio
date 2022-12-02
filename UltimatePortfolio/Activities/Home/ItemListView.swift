@@ -27,8 +27,9 @@ struct ItemListView: View {
 		NavigationLink(destination: EditItemView(item: item)) {
 			HStack(spacing: 20) {
 				Circle()
-					.stroke(Color(item.project?.projectColor ?? "Light Blue"), lineWidth: 3)
-					.frame(width: 44, height: 44)
+					.stroke(Color(item.project?.projectColor ?? "Teal"), lineWidth: 3)
+					.frame(width: 30, height: 30)
+					.padding(.leading, 7)
 
 				VStack(alignment: .leading) {
 					Text(item.itemTitle)
@@ -48,5 +49,18 @@ struct ItemListView: View {
 			.shadow(color: .black.opacity(0.2), radius: 5)
 		}
 		.buttonStyle(.plain)
+	}
+}
+
+struct ItemListView_Previews: PreviewProvider {
+	static var previews: some View {
+		NavigationStack {
+			VStack(alignment: .leading) {
+				ItemListView(title: "Up Next", items: ArraySlice([Item.example, Item.example]))
+			}
+			.frame(maxWidth: .infinity, maxHeight: .infinity)
+			.padding()
+			.background(Color.systemGroupedBackground)
+		}
 	}
 }

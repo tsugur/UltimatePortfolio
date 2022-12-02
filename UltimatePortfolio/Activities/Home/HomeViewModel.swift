@@ -16,6 +16,9 @@ extension HomeView {
 		@Published var projects = [Project]()
 		@Published var items = [Item]()
 
+		@Published var selectedItem: Item? // this one's for Spotlight
+		@Published var path: [Item] = []
+
 		var dataController: DataController
 
 		var upNext: ArraySlice<Item> {
@@ -86,6 +89,11 @@ extension HomeView {
 		func addSampleData() {
 			dataController.deleteAll()
 			try? dataController.createSampleData()
+		}
+
+		func selectItem(with identifier: String) {
+			selectedItem = dataController.item(with: identifier)
+			path.append(dataController.item(with: identifier) ?? Item())
 		}
 	}
 }
