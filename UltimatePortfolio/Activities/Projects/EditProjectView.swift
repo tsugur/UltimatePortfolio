@@ -18,7 +18,12 @@ struct EditProjectView: View {
 	@State private var detail: String
 	@State private var color: String
 	@State private var closed: Bool
+
 	@State private var showingDeleteConfirm = false
+	@State private var showingNotificationsError = false
+
+	@State private var remindMe: Bool
+	@State private var reminderTime: Date
 
 	@State private var engine = try? CHHapticEngine()
 
@@ -31,6 +36,14 @@ struct EditProjectView: View {
 		_detail = State(wrappedValue: project.projectDetail)
 		_color = State(wrappedValue: project.projectColor)
 		_closed = State(wrappedValue: project.closed)
+
+		if let reminderTime = project.reminderTime {
+			_reminderTime = State(wrappedValue: reminderTime)
+			_remindMe = State(wrappedValue: true)
+		} else {
+			_reminderTime = State(wrappedValue: Date())
+			_remindMe = State(wrappedValue: false)
+		}
 	}
 
 	var body: some View {
@@ -45,6 +58,20 @@ struct EditProjectView: View {
 					ForEach(Project.colors, id: \.self, content: colorPicker)
 				}
 				.padding(.vertical)
+			}
+
+			Section("Project reminders") {
+				Toggle("Remind me", isOn: $remindMe.animation().onChange(update))
+					.alert("Oops!", isPresented: $showingNotificationsError) {
+						Button("Check Settings", action: showAppSettings)
+						Button("Cancel", role: .cancel, action: {})
+					} message: {
+						Text("There was a problem. Please check you have notifications enabled.")
+					}
+
+				if remindMe {
+					DatePicker("Reminder time", selection: $reminderTime.onChange(update), displayedComponents: .hourAndMinute)
+				}
 			}
 
 			// swiftlint:disable:next line_length
@@ -74,6 +101,21 @@ struct EditProjectView: View {
 		project.detail = detail
 		project.color = color
 		project.closed = closed
+		if remindMe {
+			project.reminderTime = reminderTime
+
+			dataController.addReminders(for: project) { success in
+				if success == false {
+					showingNotificationsError = true
+					project.reminderTime = nil
+					remindMe = false
+				}
+			}
+		} else {
+			project.reminderTime = nil
+
+			dataController.removeReminders(for: project)
+		}
 	}
 
 	func delete() {
@@ -145,6 +187,14 @@ struct EditProjectView: View {
 			: .isButton
 		)
 		.accessibilityLabel(LocalizedStringKey(item))
+	}
+
+	func showAppSettings() {
+		guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else { return }
+
+		if UIApplication.shared.canOpenURL(settingsURL) {
+			UIApplication.shared.open(settingsURL)
+		}
 	}
 }
 

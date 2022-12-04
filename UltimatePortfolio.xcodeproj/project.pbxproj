@@ -167,8 +167,8 @@
 		6129DECA292B56830017539C /* Configuration */ = {
 			isa = PBXGroup;
 			children = (
-				61A80763292B5ABD00AE92AB /* Info.plist */,
 				619E4F3729083945007F9C30 /* Main.xcdatamodeld */,
+				61A80763292B5ABD00AE92AB /* Info.plist */,
 				6192EA2B290B1FAE00DF6E8C /* UltimatePortfolio.entitlements */,
 			);
 			path = Configuration;
